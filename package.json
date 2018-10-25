@@ -1,0 +1,26 @@
+{
+  "name": "iwrite",
+  "version": "1.0.0",
+  "description": "iwrite is a Markdown Editor, support file explorer, quick search in file and path, markdown preview (including markdown std syntax, plantuml, and others), export to html or pdf, Git integeration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hitzhangjie/iWrite.git"
+  },
+  "keywords": [
+    "markdown",
+    "editor",
+    "write"
+  ],
+  "author": "zhangjie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hitzhangjie/iWrite/issues"
+  },
+  "homepage": "https://github.com/hitzhangjie/iWrite#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}

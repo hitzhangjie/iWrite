@@ -1,0 +1,1 @@
+iWrite is a Markdown Editor, support file explorer, quick search        in file and path, markdown preview (including markdown std syntax, plantuml, and ot       hers), export to html or pdf, Git integeration.
