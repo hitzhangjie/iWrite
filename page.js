@@ -120,7 +120,7 @@ function registerOpenFileHandler() {
     // Async message handler
     ipcRenderer.on('filedata', (event, data) => {
         console.log(data)
-        alert("file data is: \n" + data)
+        //alert("file data is: \n" + data)
     })
 
     document.getElementById('openfile').onclick = (event) => {
@@ -140,7 +140,18 @@ function openFileKeyBinding() {
 
         ipcRenderer.on('filedata', (event, data) => {
             //document.write(data)
-            alert('file data is:\n' + data)
+            //alert('file raw data is:\n' + data)
+            console.log(parseMarkdownText(data))
+            //alert('file rendered data is:\n' + parseMarkdownText(data))
+            document.getElementById('markdown-doc-raw').innerHTML = data
+            document.getElementById('markdown-doc-render').innerHTML = parseMarkdownText(data)
         })
     })
+}
+
+function parseMarkdownText(filedata) {
+
+    var MarkdownIt = require('markdown-it');
+    var md = new MarkdownIt();
+    return md.render(filedata)
 }

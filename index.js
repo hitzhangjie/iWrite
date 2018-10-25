@@ -118,19 +118,18 @@ function handleOpenFileEvt() {
         }
     })
 
-    console.log("hello world")
 }
 
 // 创建窗口
 function createWindow() {
 
     win = new BrowserWindow({
-        backgroundColor: '#1c212e',
+        //backgroundColor: '#1c212e',
         width: 1024,
         height: 1024,
         //frame: false,
         //titleBarStyle: 'hiddenInset',
-        transparent: true,
+        //transparent: true,
     })
 
     win.loadURL(url.format({
