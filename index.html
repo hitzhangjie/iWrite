@@ -7,13 +7,29 @@
     <script type="text/javascript" src="page.js"></script>
 </head>
 
-<body>
+<body style="width:100%;height:100%;">
+    <!-- test 发送消息通知 -->
     <button type="button" id="notify" name="button">Hi, yly, Click here to trigger a notification!</button>
     <script type="text/javascript">
         buildContextMenu()
         buildTrayMenu()
         registerNotifyHandler() 
     </script>
+
+    <!-- test 测试进程间通信 -->
+    <button type="button" id="openfile" name="button">Hi, yly, Click here to select a file!</button>
+    <script type="text/javascript">
+        registerOpenFileHandler()
+    </script>
+
+    <!-- test 加载markdown预览 -->
+    <webview id="markdown-preview" src="https://www.tutorialspoint.com/" style="width:100%; height:100%;">
+        <div class="indicator"></div>
+    </webview>
+    <script type="text/javascript">
+        loadMarkdownPreview()
+    </script>
+
 </body>
 
 </html>

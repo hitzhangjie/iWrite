@@ -92,3 +92,40 @@ function registerNotifyHandler() {
     //buildTrayMenu()
     //registerNotifyHandler()
 }
+
+// 启动markdown渲染
+function loadMarkdownPreview() {
+    onload = () => {
+        const webview = document.getElementById('markdown-preview')
+        const indicator = document.querySelector('.indicator')
+
+        const loadstart = () => {
+            indicator.innerText = 'loading...'
+        }
+
+        const loadstop = () => {
+            indicator.innerText = ''
+        }
+
+        webview.addEventListener('did-start-loading', loadstart)
+        webview.addEventListener('did-stop-loading', loadstop)
+    }
+}
+
+// 给主进程发送消息
+function registerOpenFileHandler() {
+
+    const { ipcRenderer } = require('electron')
+
+    // Async message handler
+    ipcRenderer.on('filedata', (event, arg) => {
+        console.log(arg)
+        alert("file data is: \n" + arg)
+    })
+
+    document.getElementById('openfile').onclick = (event) => {
+        // Async message sender
+        ipcRenderer.send('openfile', 'please show the dialog for select file')
+        console.log('send openfile message to ipcMain')
+    }
+}

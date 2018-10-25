@@ -1,6 +1,6 @@
 {
     "commands": {
         "build": "-build-command",
-        "run": "/usr/local/bin/electron ./index.js"
+        "run": "/usr/local/bin/electron --inspect=5858 ./index.js"
     }
 }

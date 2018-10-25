@@ -90,10 +90,49 @@ function buildAppMenu() {
     Menu.setApplicationMenu(menu)
 }
 
+function handleOpenFileEvt() {
+
+    const { ipcMain } = require('electron')
+    const { dialog } = require('electron')
+    const fs = require('fs')
+
+    ipcMain.on('openfile', (event, path) => {
+
+        dialog.showOpenDialog(function (fileNames) {
+            // fileNames is an array that contains all the selected
+            if (fileNames === undefined)
+                console.log("No file selected")
+            else
+                readFile(fileNames[0])
+        })
+
+        function readFile(filepath) {
+            fs.readFile(filepath, 'utf-8', (err, data) => {
+                if (err) {
+                    alert("An error ocurred reading the file :" + err.message)
+                    return
+                }
+                // handle the file content
+                event.sender.send('filedata', data)
+            })
+        }
+    })
+
+    console.log("hello world")
+}
+
 // 创建窗口
 function createWindow() {
 
-    win = new BrowserWindow({ width: 800, height: 600 })
+    win = new BrowserWindow({
+        backgroundColor: '#1c212e',
+        width: 1024,
+        height: 1024,
+        //frame: false,
+        //titleBarStyle: 'hiddenInset',
+        transparent: true,
+    })
+
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
@@ -101,6 +140,7 @@ function createWindow() {
     }))
 
     buildAppMenu()
+    handleOpenFileEvt()
 }
 
 app.on('ready', createWindow)
