@@ -120,6 +120,8 @@ function handleOpenFileEvt() {
 
 }
 
+let win
+
 // 创建窗口
 function createWindow() {
 
@@ -138,8 +140,32 @@ function createWindow() {
         slashes: true
     }))
 
+    // 打开调试工具调试主进程
+    //win.webContents.openDevTools()
+
     buildAppMenu()
     handleOpenFileEvt()
+
+    // cmd+w关闭窗口，重置win为null，方便后续检测是否重建窗口，
+    win.on('closed', () => {
+        win = null;
+    });
 }
 
+// docment准备就绪后创建主程序窗口
 app.on('ready', createWindow)
+
+// 关闭所有窗口的时候时触发，程序退出
+app.on('window-all-closed', () => {
+    // OS X下程序不退出，与其他应用的展示逻辑保持一致！一致很重要，不要“独”行！
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
+
+// OS X下当点击dock按钮重新激活，或者cmd+tab+option重新激活应用时，重建窗口
+app.on('activate', () => {
+    if (win === null) {
+        createWindow()
+    }
+})
