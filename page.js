@@ -118,9 +118,9 @@ function registerOpenFileHandler() {
     const { ipcRenderer } = require('electron')
 
     // Async message handler
-    ipcRenderer.on('filedata', (event, arg) => {
-        console.log(arg)
-        alert("file data is: \n" + arg)
+    ipcRenderer.on('filedata', (event, data) => {
+        console.log(data)
+        alert("file data is: \n" + data)
     })
 
     document.getElementById('openfile').onclick = (event) => {
@@ -128,4 +128,19 @@ function registerOpenFileHandler() {
         ipcRenderer.send('openfile', 'please show the dialog for select file')
         console.log('send openfile message to ipcMain')
     }
+}
+
+function openFileKeyBinding() {
+    const { ipcRenderer, remote } = require('electron')
+    const { globalShortcut } = remote
+    globalShortcut.register('CommandOrControl+O', () => {
+        ipcRenderer.send('openfile', () => {
+            console.log("Event sent.");
+        })
+
+        ipcRenderer.on('filedata', (event, data) => {
+            //document.write(data)
+            alert('file data is:\n' + data)
+        })
+    })
 }
