@@ -21,6 +21,8 @@
     "url": "https://github.com/hitzhangjie/iWrite/issues"
   },
   "homepage": "https://github.com/hitzhangjie/iWrite#readme",
-  "dependencies": {},
+  "dependencies": {
+    "node-notifier": "^5.3.0"
+  },
   "devDependencies": {}
 }
