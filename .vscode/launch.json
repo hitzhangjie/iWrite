@@ -11,7 +11,7 @@
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": "/usr/local/bin/electron",
             "args": [
-                "./index.js"
+                "./main.js"
             ]
         }
     ]

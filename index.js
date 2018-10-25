@@ -1,171 +1,157 @@
-const { app, BrowserWindow, Menu, MenuItem } = require('electron')
-const url = require('url')
-const path = require('path')
+// 构建鼠标上下文菜单
+function buildContextMenu() {
+    const { remote } = require('electron')
+    const { Menu, MenuItem } = remote
 
-// 创建菜单
-function buildAppMenu() {
+    const menu = new Menu()
 
-    const template = [{
-        label: 'File',
-        submenu: [
-            { role: 'recentdocuments' },
-            { label: 'Open File' },
-            { label: 'Open Folder' }
-        ]
-    }, {
-        label: 'Edit',
-        submenu: [
-            { role: 'undo' },
-            { role: 'redo' },
-            { type: 'separator' },
-            { role: 'cut' },
-            { role: 'copy' },
-            { role: 'paste' }
-        ]
-    }, {
-        label: 'Format',
-        submenu: [
-            {
-                label: 'Heading',
-                submenu: [
-                    { label: 'Heading 1' },
-                    { label: 'Heading 2' },
-                    { label: 'Heading 3' },
-                    { label: 'Heading 4' },
-                    { label: 'Heading 5' },
-                    { label: 'Heading 6' },
-                ]
-            },
-            { label: 'Bold' },
-            { label: 'Italic' },
-            { label: 'Delete' },
-            { label: 'Quote Block' },
-            { label: 'Code Block' },
-            { label: 'Inline Code' },
-            { label: 'Reference' },
-            { label: 'Image' },
-        ]
-    }, {
-        label: 'View',
-        submenu: [
-            { role: 'reload' },
-            { role: 'toggledevtools' },
-            { type: 'separator' },
-            { role: 'resetzoom' },
-            { role: 'zoomin' },
-            { role: 'zoomout' },
-            { type: 'separator' },
-            { role: 'togglefullscreen' }
-        ]
-    }, {
-        role: 'window',
-        submenu: [
-            { role: 'minimize' },
-            { role: 'close' }
-        ]
-    }, {
-        role: 'help',
-        submenu: [
-            { label: 'Learn More' }
-        ]
-    }]
-
-    if (process.platform === 'darwin') {
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                { role: 'about' },
-                { type: 'separator' },
-                { role: 'services', submenu: [] },
-                { type: 'separator' },
-                { role: 'hide' },
-                { role: 'hideothers' },
-                { role: 'unhide' },
-                { type: 'separator' },
-                { role: 'quit' }
-            ]
-        })
-    }
-    const menu = Menu.buildFromTemplate(template)
-    Menu.setApplicationMenu(menu)
-}
-
-function handleOpenFileEvt() {
-
-    const { ipcMain } = require('electron')
-    const { dialog } = require('electron')
-    const fs = require('fs')
-
-    ipcMain.on('openfile', (event, path) => {
-
-        dialog.showOpenDialog(function (fileNames) {
-            // fileNames is an array that contains all the selected
-            if (fileNames === undefined)
-                console.log("No file selected")
-            else
-                readFile(fileNames[0])
-        })
-
-        function readFile(filepath) {
-            fs.readFile(filepath, 'utf-8', (err, data) => {
-                if (err) {
-                    alert("An error ocurred reading the file :" + err.message)
-                    return
-                }
-                // handle the file content
-                event.sender.send('filedata', data)
-            })
+    // Build menu one item at a time, unlike
+    menu.append(new MenuItem({
+        label: 'MenuItem1',
+        click() {
+            console.log('item 1 clicked')
         }
-    })
-
-}
-
-let win
-
-// 创建窗口
-function createWindow() {
-
-    win = new BrowserWindow({
-        //backgroundColor: '#1c212e',
-        width: 1024,
-        height: 1024,
-        //frame: false,
-        //titleBarStyle: 'hiddenInset',
-        //transparent: true,
-    })
-
-    win.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file:',
-        slashes: true
     }))
 
-    // 打开调试工具调试主进程
-    //win.webContents.openDevTools()
+    menu.append(new MenuItem({ type: 'separator' }))
+    menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }))
+    menu.append(new MenuItem({
+        label: 'MenuItem3',
+        click() {
+            console.log('item 3 clicked')
+        }
+    }))
 
-    buildAppMenu()
-    handleOpenFileEvt()
-
-    // cmd+w关闭窗口，重置win为null，方便后续检测是否重建窗口，
-    win.on('closed', () => {
-        win = null;
-    });
+    // Prevent default action of right click in chromium. Replace with our menu.
+    window.addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+        menu.popup(remote.getCurrentWindow())
+    }, false)
 }
 
-// docment准备就绪后创建主程序窗口
-app.on('ready', createWindow)
+// 构建托盘按钮上下文菜单
+function buildTrayMenu() {
+    const { remote } = require('electron')
+    const { Tray, Menu } = remote
+    const path = require('path')
 
-// 关闭所有窗口的时候时触发，程序退出
-app.on('window-all-closed', () => {
-    // OS X下程序不退出，与其他应用的展示逻辑保持一致！一致很重要，不要“独”行！
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
+    let trayIcon = new Tray(path.join('', '/Users/zhangjie/Downloads/iWrite.png'))
 
-// OS X下当点击dock按钮重新激活，或者cmd+tab+option重新激活应用时，重建窗口
-app.on('activate', () => {
-    if (win === null) {
-        createWindow()
+    const trayMenuTemplate = [
+        {
+            label: 'Empty Application',
+            enabled: false
+        },
+
+        {
+            label: 'Settings',
+            click: function () {
+                console.log("Clicked on settings")
+            }
+        },
+
+        {
+            label: 'Help',
+            click: function () {
+                console.log("Clicked on Help")
+            }
+        }
+    ]
+
+    let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
+    trayIcon.setContextMenu(trayMenu)
+}
+
+// 注册通知回调函数
+function registerNotifyHandler() {
+    const notifier = require('node-notifier')
+    const path = require('path');
+
+    document.getElementById('notify').onclick = (event) => {
+        notifier.notify({
+            title: 'My awesome title',
+            message: 'Hello from electron, Mr. User!',
+            icon: path.join('', '/Users/zhangjie/Downloads/iWrite.png'),  // Absolute path (doesn't work on balloons)
+            sound: true,  // Only Notification Center or Windows Toasters
+            wait: true    // Wait with callback, until user action is taken against notification
+
+        }, function (err, response) {
+            // Response is response from notification
+        });
+
+        notifier.on('click', function (notifierObject, options) {
+            console.log("You clicked on the notification")
+        });
+
+        notifier.on('timeout', function (notifierObject, options) {
+            console.log("Notification timed out!")
+        });
     }
-})
+
+    //buildContextMenu()
+    //buildTrayMenu()
+    //registerNotifyHandler()
+}
+
+// 启动markdown渲染
+function loadMarkdownPreview() {
+    onload = () => {
+        const webview = document.getElementById('markdown-preview')
+        const indicator = document.querySelector('.indicator')
+
+        const loadstart = () => {
+            indicator.innerText = 'loading...'
+        }
+
+        const loadstop = () => {
+            indicator.innerText = ''
+        }
+
+        webview.addEventListener('did-start-loading', loadstart)
+        webview.addEventListener('did-stop-loading', loadstop)
+    }
+}
+
+// 给主进程发送消息
+function registerOpenFileHandler() {
+
+    const { ipcRenderer } = require('electron')
+
+    // Async message handler
+    ipcRenderer.on('filedata', (event, data) => {
+        console.log(data)
+        //alert("file data is: \n" + data)
+    })
+
+    document.getElementById('openfile').onclick = (event) => {
+        // Async message sender
+        ipcRenderer.send('openfile', 'please show the dialog for select file')
+        console.log('send openfile message to ipcMain')
+    }
+}
+
+function openFileKeyBinding() {
+    const { ipcRenderer, remote } = require('electron')
+    const { globalShortcut } = remote
+    globalShortcut.register('CommandOrControl+O', () => {
+        ipcRenderer.send('openfile', () => {
+            console.log("Event sent.");
+        })
+
+        ipcRenderer.on('filedata', (event, data) => {
+            //document.write(data)
+            //alert('file raw data is:\n' + data)
+            console.log(parseMarkdownText(data))
+            //alert('file rendered data is:\n' + parseMarkdownText(data))
+            document.getElementById('markdown-doc-raw').innerHTML = data
+            document.getElementById('markdown-doc-render').innerHTML = parseMarkdownText(data)
+        })
+    })
+}
+
+function parseMarkdownText(filedata) {
+
+    var MarkdownIt = require('markdown-it');
+    var md = new MarkdownIt();
+    return md.render(filedata)
+}

@@ -4,7 +4,7 @@
   "description": "iwrite is a Markdown Editor, support file explorer, quick search in file and path, markdown preview (including markdown std syntax, plantuml, and others), export to html or pdf, Git integeration.",
   "main": "index.js",
   "scripts": {
-    "test": "/usr/local/bin/electron ./index.js"
+    "test": "/usr/local/bin/electron ./main.js"
   },
   "repository": {
     "type": "git",
