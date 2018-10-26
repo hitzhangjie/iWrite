@@ -4,34 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>iWrite</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="markdown-solarized.css">
-    <script type="text/javascript" src="index.js"></script>
 </head>
 
 <body style="width:100%;height:100%;">
     <!-- test 发送消息通知 -->
     <button type="button" id="notify" name="button">Hi, yly, Click here to trigger a notification!</button>
-    <script type="text/javascript">
-        buildContextMenu()
-        buildTrayMenu()
-        registerNotifyHandler() 
-    </script>
 
     <!-- test 测试进程间通信 -->
     <button type="button" id="openfile" name="button">Hi, yly, Click here to select a file!</button>
-    <script type="text/javascript">
-        //registerOpenFileHandler()
-        openFileKeyBinding()
-    </script>
 
     <!-- test 加载markdown预览 -->
     <webview id="markdown-preview" src="https://www.tutorialspoint.com/" style="width:100%; height:100%;">
         <div class="indicator"></div>
     </webview>
-    <script type="text/javascript">
-        loadMarkdownPreview()
-    </script>
 
     <!-- test markdown文档加载 -->
     <div id="markdown-doc-raw" style="width:100%; height:100%;">
@@ -40,9 +26,22 @@
     </div>
 
     <script type="text/javascript">
-        loadMarkdownPreviewArea()
-    </script>
+        require('./index.js')
 
+        // 主程序菜单、托盘按钮菜单、点击按钮发送通知
+        buildContextMenu()
+        buildTrayMenu()
+        registerNotifyHandler()
+
+        // 选择文件窗口
+        // registerOpenFileHandler()
+        openFileKeyBinding()
+
+        // 加载markdown预览
+        loadMarkdownPreview()
+        loadMarkdownPreviewArea()
+
+    </script>
 
 </body>
 

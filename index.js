@@ -1,5 +1,6 @@
 // 构建鼠标上下文菜单
 function buildContextMenu() {
+
     const { remote } = require('electron')
     const { Menu, MenuItem } = remote
 
@@ -88,9 +89,6 @@ function registerNotifyHandler() {
         });
     }
 
-    //buildContextMenu()
-    //buildTrayMenu()
-    //registerNotifyHandler()
 }
 
 // 启动markdown渲染
